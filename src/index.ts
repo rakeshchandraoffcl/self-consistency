@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
+import "./load-env.ts";
 import readline from "node:readline";
-
-dotenv.config();
+import { geminiServices, openAIServices } from "./services/index.ts";
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -19,11 +18,26 @@ function chat() {
 			rl.close();
 			return;
 		}
-		const question = prompt?.trim();
-		if (question === "Hi") {
-			console.log("Hello! How can I help you today?");
-			return chat();
+		try {
+			const question = prompt?.trim();
+			const [openAIResponse, geminiResponse] = await Promise.allSettled([
+				openAIServices.getOpenAIResponse(question),
+				geminiServices.getGeminiResponse(question),
+			]);
+			if (openAIResponse.status === "fulfilled") {
+				console.log("OpenAI Response:", openAIResponse.value);
+			} else {
+				console.error("OpenAI Error:", openAIResponse.reason);
+			}
+			if (geminiResponse.status === "fulfilled") {
+				console.log("Gemini Response:", geminiResponse.value);
+			} else {
+				console.error("Gemini Error:", geminiResponse.reason);
+			}
+		} catch (error) {
+			console.error("Error:", error);
 		}
+		chat();
 	});
 }
 

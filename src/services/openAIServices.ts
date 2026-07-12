@@ -6,8 +6,10 @@ const client = new OpenAI({
 
 export const getOpenAIResponse = async (prompt: string) => {
 	const response = await client.responses.create({
-		model: "gpt-4o-mini",
+		model: "gpt-5-nano",
 		input: [{ role: "user", content: prompt }],
+		max_output_tokens: 1000,
 	});
+	// console.log("OpenAI Response OP:", JSON.stringify(response, null, 2));
 	return response.output_text ?? null;
 };
