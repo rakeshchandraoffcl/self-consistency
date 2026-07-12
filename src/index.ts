@@ -1,44 +1,21 @@
 import "./load-env.ts";
-import readline from "node:readline";
-import { geminiServices, openAIServices } from "./services/index.ts";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { Hono } from "hono";
+import { chatRoutes } from "./routes/chat.ts";
 
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.join(__dirname, "../public");
+const port = Number(process.env.PORT) || 3000;
+
+const app = new Hono();
+
+app.route("/api/chat", chatRoutes);
+app.use("/*", serveStatic({ root: publicDir }));
+app.get("/", serveStatic({ path: "index.html", root: publicDir }));
+
+serve({ fetch: app.fetch, port }, () => {
+	console.log(`Server running at http://localhost:${port}`);
 });
-
-console.log("=================================");
-console.log("      AI Terminal Chat");
-console.log("Type 'quit' to quit");
-console.log("=================================\n");
-
-function chat() {
-	rl.question("Ask your question: ", async (prompt) => {
-		if (prompt?.trim().toLowerCase() === "quit") {
-			rl.close();
-			return;
-		}
-		try {
-			const question = prompt?.trim();
-			const [openAIResponse, geminiResponse] = await Promise.allSettled([
-				openAIServices.getOpenAIResponse(question),
-				geminiServices.getGeminiResponse(question),
-			]);
-			if (openAIResponse.status === "fulfilled") {
-				console.log("OpenAI Response:", openAIResponse.value);
-			} else {
-				console.error("OpenAI Error:", openAIResponse.reason);
-			}
-			if (geminiResponse.status === "fulfilled") {
-				console.log("Gemini Response:", geminiResponse.value);
-			} else {
-				console.error("Gemini Error:", geminiResponse.reason);
-			}
-		} catch (error) {
-			console.error("Error:", error);
-		}
-		chat();
-	});
-}
-
-chat();
