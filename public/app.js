@@ -57,10 +57,15 @@ form.addEventListener("submit", async (event) => {
 		if (!response.ok) {
 			const error = await response.json().catch(() => ({}));
 			const message = error.error ?? `Request failed (${response.status})`;
-			renderProviderCard(openaiCard, "OpenAI", "bg-emerald-100 text-emerald-800", {
-				ok: false,
-				error: message,
-			});
+			renderProviderCard(
+				openaiCard,
+				"OpenAI",
+				"bg-emerald-100 text-emerald-800",
+				{
+					ok: false,
+					error: message,
+				},
+			);
 			renderProviderCard(geminiCard, "Gemini", "bg-blue-100 text-blue-800", {
 				ok: false,
 				error: message,
@@ -83,10 +88,15 @@ form.addEventListener("submit", async (event) => {
 		);
 	} catch (error) {
 		const message = error instanceof Error ? error.message : String(error);
-		renderProviderCard(openaiCard, "OpenAI", "bg-emerald-100 text-emerald-800", {
-			ok: false,
-			error: message,
-		});
+		renderProviderCard(
+			openaiCard,
+			"OpenAI",
+			"bg-emerald-100 text-emerald-800",
+			{
+				ok: false,
+				error: message,
+			},
+		);
 		renderProviderCard(geminiCard, "Gemini", "bg-blue-100 text-blue-800", {
 			ok: false,
 			error: message,

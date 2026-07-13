@@ -1,4 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
+import {
+	type ProviderResponse,
+	type StructuredResponse,
+	StructuredResponseJsonSchema,
+	StructuredResponseSchema,
+} from "../types/index.ts";
 
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) {
@@ -7,13 +13,22 @@ if (!apiKey) {
 
 const ai = new GoogleGenAI({ apiKey });
 
-export const getGeminiResponse = async (prompt: string) => {
-	const response = await ai.models.generateContent({
+export const getGeminiResponse = async (
+	prompt: string,
+): Promise<ProviderResponse<StructuredResponse>> => {
+	const response = await ai.interactions.create({
 		model: "gemini-3.1-flash-lite",
-		contents: prompt,
-		config: {
-			maxOutputTokens: 1000,
+		input: prompt,
+		response_format: {
+			type: "text",
+			mime_type: "application/json",
+			schema: StructuredResponseJsonSchema,
 		},
 	});
-	return response?.text ?? null;
+	if (!response?.output_text) {
+		return null;
+	}
+
+	const parsed: unknown = JSON.parse(response.output_text);
+	return StructuredResponseSchema.parse(parsed);
 };

@@ -1,11 +1,17 @@
 import { Hono } from "hono";
 import { geminiServices, openAIServices } from "../services/index.ts";
+import {
+	type ProviderResponse,
+	type StructuredResponse,
+} from "../types/index.ts";
 
 type ProviderResult =
-	| { ok: true; text: string | null }
+	| { ok: true; text: ProviderResponse<StructuredResponse> }
 	| { ok: false; error: string };
 
-function formatResult(result: PromiseSettledResult<string | null>): ProviderResult {
+function formatResult(
+	result: PromiseSettledResult<ProviderResponse<StructuredResponse>>,
+): ProviderResult {
 	if (result.status === "fulfilled") {
 		return { ok: true, text: result.value };
 	}
