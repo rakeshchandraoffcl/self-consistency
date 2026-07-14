@@ -1,7 +1,7 @@
 {
-	"name": "self-consistency",
+	"name": "refinechat",
 	"version": "1.0.0",
-	"description": "A GenAI application that uses the self-consistency technique to generate a better final answer for the user.",
+	"description": "RefineChat — ask a coding question, get parallel answers from multiple models, and receive one refined final answer.",
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
