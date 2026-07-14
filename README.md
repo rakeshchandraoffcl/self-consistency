@@ -2,7 +2,7 @@
 
 Ask a coding or engineering question and get one refined final answer.
 
-RefineChat queries **OpenAI** and **Gemini** in parallel, then uses **Claude** to compare those responses and produce a clearer, more accurate final answer. The focus is the refined reply you see first — not which model “won.”
+RefineChat queries **OpenAI** and **Gemini** in parallel, then uses **Claude** to compare those responses and produce a clearer, more accurate final answer.
 
 ## How it works
 
@@ -70,7 +70,7 @@ Request body:
 
 ```json
 {
-  "question": "How does React reconciliation work?"
+	"question": "How does React reconciliation work?"
 }
 ```
 
