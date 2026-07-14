@@ -1,14 +1,17 @@
 {
-	"name": "self-consistency",
+	"name": "refinechat",
 	"version": "1.0.0",
-	"description": "A GenAI application that uses the self-consistency technique to generate a better final answer for the user.",
+	"description": "RefineChat — ask a coding question, get parallel answers from multiple models, and receive one refined final answer.",
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "tsx watch src/index.ts",
+		"dev:css": "tailwindcss -i ./public/input.css -o ./public/styles.css --watch",
+		"dev:server": "tsx watch src/index.ts",
+		"dev": "concurrently \"npm run dev:css\" \"npm run dev:server\"",
+		"build:css": "tailwindcss -i ./public/input.css -o ./public/styles.css --minify",
 		"build": "tsc",
-		"start": "node dist/index.js"
+		"start": "npm run build:css && tsc && node dist/index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -21,14 +24,19 @@
 	},
 	"homepage": "https://github.com/rakeshchandraoffcl/self-consistency#readme",
 	"devDependencies": {
+		"@tailwindcss/cli": "^4.3.2",
 		"@types/node": "^26.1.1",
+		"concurrently": "^10.0.3",
+		"tailwindcss": "^4.3.2",
 		"tsx": "^4.23.0",
 		"typescript": "^7.0.2"
 	},
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.110.0",
 		"@google/genai": "^2.11.0",
+		"@hono/node-server": "^2.0.8",
 		"dotenv": "^17.4.2",
+		"hono": "^4.12.29",
 		"openai": "^6.46.0",
 		"zod": "^4.4.3"
 	}

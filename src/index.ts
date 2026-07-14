@@ -1,30 +1,21 @@
-import dotenv from "dotenv";
-import readline from "node:readline";
+import "./load-env.ts";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { Hono } from "hono";
+import { chatRoutes } from "./routes/chat.ts";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.join(__dirname, "../public");
+const port = Number(process.env.PORT) || 3000;
 
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
+const app = new Hono();
+
+app.route("/api/chat", chatRoutes);
+app.use("/*", serveStatic({ root: publicDir }));
+app.get("/", serveStatic({ path: "index.html", root: publicDir }));
+
+serve({ fetch: app.fetch, port }, () => {
+	console.log(`Server running at http://localhost:${port}`);
 });
-
-console.log("=================================");
-console.log("      AI Terminal Chat");
-console.log("Type 'quit' to quit");
-console.log("=================================\n");
-
-function chat() {
-	rl.question("Ask your question: ", async (prompt) => {
-		if (prompt?.trim().toLowerCase() === "quit") {
-			rl.close();
-			return;
-		}
-		const question = prompt?.trim();
-		if (question === "Hi") {
-			console.log("Hello! How can I help you today?");
-			return chat();
-		}
-	});
-}
-
-chat();

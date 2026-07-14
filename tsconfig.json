@@ -43,7 +43,9 @@
 		"skipLibCheck": true,
 		"paths": {
 			"@/*": ["./src/*"],
-			"@services/*": ["./src/services/*"]
+			"@services/*": ["./src/services/*"],
+			"@types/*": ["./src/types/*"],
+			"@utils/*": ["./src/utils/*"]
 		}
 	},
 	"include": ["src/**/*"],
