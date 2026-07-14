@@ -33,7 +33,6 @@ This follows a self-consistency style approach: multiple independent answers →
 
 ```bash
 npm install
-cp .env.example .env
 ```
 
 Fill in `.env`:
@@ -87,7 +86,7 @@ Request body:
 
 ```json
 {
-  "question": "How does React reconciliation work?"
+	"question": "How does React reconciliation work?"
 }
 ```
 
