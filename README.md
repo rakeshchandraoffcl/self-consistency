@@ -62,6 +62,23 @@ npm start
 
 Optional: set `PORT` in the environment (defaults to `3000`).
 
+## Docker
+
+With `.env` filled in:
+
+```bash
+docker compose up --build
+```
+
+Or without Compose:
+
+```bash
+docker build -t refinechat .
+docker run -p 3000:3000 --env-file .env refinechat
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
 ## API
 
 ### `POST /api/chat`

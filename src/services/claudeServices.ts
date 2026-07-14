@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT } from "../utils/constant.ts";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import { CompareResponseSchema } from "@types/ai-response.ts";
+import { CompareResponseSchema } from "../types/ai-response.ts";
 
 const client = new Anthropic({
 	apiKey: process.env.CLAUDE_API_KEY,
