@@ -1,5 +1,9 @@
 import { Hono } from "hono";
-import { geminiServices, openAIServices } from "../services/index.ts";
+import {
+	claudeServices,
+	geminiServices,
+	openAIServices,
+} from "../services/index.ts";
 import {
 	type ProviderResponse,
 	type StructuredResponse,
@@ -22,6 +26,15 @@ function formatResult(
 	return { ok: false, error };
 }
 
+function getResponseValue(
+	result: PromiseSettledResult<ProviderResponse<StructuredResponse>>,
+) {
+	if (result.status === "fulfilled") {
+		return result.value;
+	}
+	return null;
+}
+
 export const chatRoutes = new Hono();
 
 chatRoutes.post("/", async (c) => {
@@ -37,8 +50,23 @@ chatRoutes.post("/", async (c) => {
 		geminiServices.getGeminiResponse(question),
 	]);
 
+	const openAIValue = getResponseValue(openAIResponse);
+	const geminiValue = getResponseValue(geminiResponse);
+
+	if (!openAIValue || !geminiValue) {
+		return c.json({ error: "Failed to get response from models" }, 500);
+	}
+
+	const compareResponse = await claudeServices.getClaudeResponse(
+		JSON.stringify({
+			question,
+			openAI: openAIValue,
+			gemini: geminiValue,
+		}),
+	);
 	return c.json({
 		openai: formatResult(openAIResponse),
 		gemini: formatResult(geminiResponse),
+		claude: compareResponse,
 	});
 });

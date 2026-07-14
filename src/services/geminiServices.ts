@@ -5,6 +5,7 @@ import {
 	StructuredResponseJsonSchema,
 	StructuredResponseSchema,
 } from "../types/index.ts";
+import { SYSTEM_PROMPT } from "../utils/constant.ts";
 
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) {
@@ -19,6 +20,7 @@ export const getGeminiResponse = async (
 	const response = await ai.interactions.create({
 		model: "gemini-3.1-flash-lite",
 		input: prompt,
+		system_instruction: SYSTEM_PROMPT.FETCHER_PROMPT,
 		response_format: {
 			type: "text",
 			mime_type: "application/json",
